@@ -53,7 +53,7 @@ public class VitalMonitor {
         byte[] data = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = null;
+            ObjectOutputStream oos = null;  //An object can be reconstructed using ObjectInputStream
             oos = new ObjectOutputStream(bos);
             oos.writeObject(monitor);
             data = bos.toByteArray();

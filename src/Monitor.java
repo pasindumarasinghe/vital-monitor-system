@@ -38,7 +38,7 @@ public class Monitor implements Serializable, Runnable {
         int maxIncomingConnections = 10;
 
         try {
-            serverSocket = new ServerSocket(this.port, maxIncomingConnections, this.ip);
+            serverSocket = new ServerSocket(this.port, maxIncomingConnections, this.ip);    //Create a server with the specified port, listen backlog, and local IP address to bind to.
             System.out.printf("starting up on %s port %s\n", this.ip, this.port);
 
             //Wait for a connection
