@@ -1,11 +1,12 @@
 /*
+E/17/207
 Pasindu Marasinghe
 */
 import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
-import java.net.*;
+import java.util.TreeSet;
 
 public class Gateway{
 
@@ -27,25 +28,30 @@ public class Gateway{
 
 		Gateway gatewayServer = new Gateway();
 
+		/* A TreeSet is used to store the details of connected vital monitors
+		*  tree set guarantees log(n) time cost for the basic operations such as add, remove and contains
+		*/
+		TreeSet<String> connectedMonitors = new TreeSet<String>();
+
 		try{
-			int UDP_RECEIVE_PORT = 6000;
-			DatagramSocket dSocket = new DatagramSocket(UDP_RECEIVE_PORT);
+			int UDP_RECEIVE_PORT = 7568;
+			while(true){
+				DatagramSocket dSocket = new DatagramSocket(UDP_RECEIVE_PORT);
+				byte[] recvBuf = new byte[2048];
+				DatagramPacket dPacket = new DatagramPacket(recvBuf,recvBuf.length);
+				dSocket.receive(dPacket);
+				Monitor m = gatewayServer.parseDatagramObjectFromVitalMonitor(dPacket.getData());
+				String monitorID = m.getMonitorID();
 
-			byte[] recvBuf = new byte[2048];
-			DatagramPacket dPacket = new DatagramPacket(recvBuf,recvBuf.length);
-			dSocket.receive(dPacket);
-
-			try{
-				Monitor mon1 = gatewayServer.parseDatagramObjectFromVitalMonitor(dPacket.getData());
-				System.out.println(mon1.getIp());
-			} catch(Exception e){
-				System.out.println("Error when casting");
-				System.out.println(e);
+				if(!connectedMonitors.contains(monitorID)){
+					connectedMonitors.add(monitorID);
+					GatewayConnection conn = new GatewayConnection(m);
+					conn.start();
+				}
+				dSocket.close();
 			}
-			
-			dSocket.close();
-			
-		} catch(Exception e){
+		}
+		catch(Exception e){
 			System.out.println("Error");
 			e.printStackTrace();
 		}

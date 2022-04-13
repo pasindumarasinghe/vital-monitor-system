@@ -1,5 +1,5 @@
 javac VitalMonitor.java
-startingPort=13245
+startingPort=5000
 for i in $(seq 5)
 do
 	j=$((i + startingPort));
