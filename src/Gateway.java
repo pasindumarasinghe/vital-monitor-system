@@ -26,6 +26,15 @@ public class Gateway{
 
 	public static void main(String[] args){
 
+		/*
+		* 		- The Gateway receives monitor details UDP broadcasted by a vital monitor.
+		* 		- The Gateway establishes a TCP connection with the monitor and hand it over to a seperate thread to handle the
+		* 		  communication with the vital monitor
+		* 		- The main thread keeps listening for new UDP messages from the vital monitors.
+		* 		- Once a TCP connection is established with a monitor, the monitor is added to a list of connected monitors so that
+		* 		  the gateway won't try to establish connections repeatedly upon receiving broadcasts.
+		*/
+
 		Gateway gatewayServer = new Gateway();
 
 		/* A TreeSet is used to store the details of connected vital monitors

@@ -1,3 +1,7 @@
+/*
+E/17/207 - Pasindu Marasinghe
+* */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,7 +29,7 @@ public class GatewayConnection extends Thread{
             BufferedReader br = new BufferedReader(in);
             while(true){
                 String messageFromVitalMonitor = br.readLine();
-                System.out.println(monitorID+" : "+messageFromVitalMonitor);
+                System.out.println(messageFromVitalMonitor);
             }
         }
         catch(IOException e){}
