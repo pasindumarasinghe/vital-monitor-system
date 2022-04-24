@@ -9,13 +9,17 @@ import java.net.DatagramPacket;
 import java.util.TreeSet;
 
 public class Gateway{
-
-	public Monitor parseDatagramObjectFromVitalMonitor(byte[] inData){/* Parses a the datagram object broadcasted by a vital monitor */
+	/**
+	 * Parses a datagram object broadcasted by a vital monitor
+	 * @param inData
+	 * @return Monitor object whose details were sent by a vital monitor
+	 */
+	public Monitor parseDatagramObjectFromVitalMonitor(byte[] inData){
 		Monitor mon = null;
 		try{
 			ByteArrayInputStream bis = new ByteArrayInputStream(inData);
 			ObjectInputStream ois = new ObjectInputStream(bis);
-			mon = (Monitor)(ois.readObject());
+			mon = (Monitor)(ois.readObject()); /* cast the received data into a Monitor object*/
 		} catch(Exception e){
 			System.out.println("Error when Parsing UDP Object...Terminating the program");
 			e.printStackTrace();
@@ -27,7 +31,7 @@ public class Gateway{
 	public static void main(String[] args){
 
 		/*
-		* 		- The Gateway receives monitor details UDP broadcasted by a vital monitor.
+		* 		- The Gateway receives monitor details UDP broadcast by a vital monitor.
 		* 		- The Gateway establishes a TCP connection with the monitor and hand it over to a seperate thread to handle the
 		* 		  communication with the vital monitor
 		* 		- The main thread keeps listening for new UDP messages from the vital monitors.
@@ -43,7 +47,7 @@ public class Gateway{
 		TreeSet<String> connectedMonitors = new TreeSet<String>();
 
 		try{
-			int UDP_RECEIVE_PORT = 7568;
+			int UDP_RECEIVE_PORT = 7568; /* using a less common port*/
 			while(true){
 				DatagramSocket dSocket = new DatagramSocket(UDP_RECEIVE_PORT);
 				byte[] recvBuf = new byte[2048];

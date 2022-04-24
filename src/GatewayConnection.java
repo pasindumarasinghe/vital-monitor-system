@@ -15,6 +15,13 @@ public class GatewayConnection extends Thread{
         this.vitalMonitor = vitalMonitor;
     }
 
+    /**
+     * Continuously read vital details sent from a vital monitor and displays
+     * them in console along with the Vital Monitor ID
+     *
+     * Printing out vital details to the console is synchronized since multiple threads
+     * might try to write to the stdout at the same time and it might cause data races.
+     */
     private void handleMonitorConnection(){
         try {
             String monitorID = this.vitalMonitor.getMonitorID();
@@ -27,9 +34,12 @@ public class GatewayConnection extends Thread{
             /* Read Vitals from a vital monitor and display them on console*/
             InputStreamReader in = new InputStreamReader(gatewaySocket.getInputStream());
             BufferedReader br = new BufferedReader(in);
+            VitalPrinter printer = new VitalPrinter();
             while(true){
                 String messageFromVitalMonitor = br.readLine();
-                System.out.println(messageFromVitalMonitor);
+                synchronized (printer){
+                    printer.printVitalDetails(messageFromVitalMonitor);
+                }
             }
         }
         catch(IOException e){}
